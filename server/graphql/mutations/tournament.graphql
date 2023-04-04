@@ -1,0 +1,55 @@
+extend type Mutation {
+    # Create a new tournament
+    createTournament(
+        scheduledAt: DateTime
+        lateRegistrationAt: DateTime
+        name: String!
+        buyIn: Float
+        maxRegistrations: Int
+        prizePool: Float
+        reentry: Boolean
+        multipleDays: Boolean
+        tournamentCategoryId: ID
+        imgPath: String
+    ): Tournament!
+
+    # Update tournament information
+    updateTournament(
+        id: ID!
+        scheduledAt: DateTime
+        lateRegistrationAt: DateTime
+        name: String
+        buyIn: Float
+        maxRegistrations: Int
+        prizePool: Float
+        reentry: Boolean
+        multipleDays: Boolean
+        tournamentCategoryId: ID
+        imgPath: String
+    ): Tournament!
+
+    # Add a result for a user in a tournament
+    createTournamentResult(
+        position: Int!
+        prize: Float
+        tournamentId: ID!
+        userId: ID
+    ): TournamentResult
+
+    # Delete a result for a user in a tournament
+    deleteTournamentResult(
+        id: ID!
+    ): TournamentResult
+
+    # Sign a user up for a tournament
+    createTournamentRegistration(
+        tournamentId: ID!
+        userId: ID!
+        registrationDate: DateTime
+    ): TournamentRegistration
+
+    # Unsign a user from a tournament
+    deleteTournamentRegistration(
+        id: ID!
+    ): TournamentRegistration
+}

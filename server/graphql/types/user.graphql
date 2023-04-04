@@ -1,0 +1,33 @@
+type User {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    email: String!
+    password: String!
+    lastName: String!
+    firstName: String!
+    nickName: String
+    isMember: Boolean!
+    role: Role!
+    team: Team
+    tournamentRegistrations: [TournamentRegistration]!
+    tournamentResults: [TournamentResult]!
+    cashGamePlayed: [CashGameRegistration]!
+    cashGameOrganized: [CashGame]!
+}
+
+type Role {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    users: [User]!
+}
+
+type Team {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    users: [User]!
+}

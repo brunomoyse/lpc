@@ -1,0 +1,23 @@
+extend type Query {
+    # Get all users
+    users(
+        take: Int = 10
+        skip: Int = 0
+    ): [User!]!
+
+    # Get a user by id
+    user(
+        id: ID!
+    ): User!
+
+    # Get all teams
+    teams(
+        take: Int = 10
+        skip: Int = 0
+    ): [Team!]!
+
+    # Get a team by id
+    team(
+        id: ID!
+    ): Team!
+}

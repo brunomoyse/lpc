@@ -1,0 +1,22 @@
+extend type Query {
+    # Get all tournaments
+    tournaments(
+        take: Int = 10
+        skip: Int = 0
+        userId: ID
+        startingRange: Date
+        endingRange: Date
+    ): [Tournament!]!
+
+    # Get a tournament by id
+    tournament(
+        id: ID!
+    ): Tournament!
+
+    # Get the tournament entries count
+    tournamentEntriesCount(
+        tournamentId: ID!
+    ): Int!
+
+
+}

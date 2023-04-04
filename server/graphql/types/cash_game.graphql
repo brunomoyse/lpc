@@ -1,0 +1,19 @@
+type CashGame {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    scheduledAt: DateTime!
+    maxRegistrations: Int
+    blinds: String
+    users: [CashGameRegistration]!
+    organizer: User
+}
+
+type CashGameRegistration {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    cashGame: CashGame!
+    user: User!
+    registrationDate: DateTime!
+}

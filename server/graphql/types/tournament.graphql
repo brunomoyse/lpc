@@ -1,0 +1,53 @@
+scalar DateTime
+scalar Date
+
+type Count {
+    tournamentRegistrations: Int # entries
+    tournamentResults: Int # paid
+}
+
+type Tournament {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    scheduledAt: DateTime
+    lateRegistrationAt: DateTime
+    name: String!
+    buyIn: Float
+    maxRegistrations: Int
+    prizePool: Float
+    reentry: Boolean
+    multipleDays: Boolean
+    category: TournamentCategory
+    imgPath: String
+    tournamentRegistrations: [TournamentRegistration]
+    tournamentResults: [TournamentResult]
+    _count: Count
+}
+
+type TournamentCategory {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    name: String!
+    tournaments: [Tournament]
+}
+
+type TournamentRegistration {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    tournament: Tournament!
+    user: User!
+    registrationDate: DateTime!
+}
+
+type TournamentResult {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    position: Int
+    prize: Float
+    tournament: Tournament!
+    user: User!
+}

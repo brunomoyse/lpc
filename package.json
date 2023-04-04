@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/image-edge": "^1.0.0-27769790.4b27db3",
+    "@nuxtjs/tailwindcss": "^6.1.3",
+    "@prisma/client": "^4.12.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^17.0.45",
+    "nuxt": "^3.0.0-rc.13",
+    "prisma": "^4.12.0",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.5.0",
+    "@as-integrations/h3": "^1.1.5",
+    "@nuxt-modules/compression": "^0.1.0",
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
+    "graphql": "^16.6.0",
+    "graphql-tag": "^2.12.6",
+    "nexus": "^1.3.0",
+    "nexus-prisma": "^1.0.4",
+    "nuxt-graphql-server": "^1.2.2",
+    "vite-plugin-compression": "^0.5.1"
+  }
+}

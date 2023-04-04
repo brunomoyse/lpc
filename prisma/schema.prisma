@@ -1,0 +1,134 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator nexusPrisma {
+   provider = "nexus-prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model CashGame {
+  id                String     @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime   @default(now()) @map("created_at")
+  updatedAt         DateTime   @default(now()) @updatedAt @map("updated_at")
+  scheduledAt       DateTime   @db.Timestamp(0) @map("scheduled_at")
+  maxRegistrations  Int?       @map("max_registrations")
+  blinds            String?    @db.VarChar(255)
+  users             CashGameRegistration[]
+  organizer         User?      @relation(fields: [organizerId], references: [id])
+  organizerId       String?    @map("organizer_id") @db.Uuid
+  @@map("cash_games")
+}
+
+model CashGameRegistration {
+  id                String    @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+  cashGame          CashGame  @relation(fields: [cashGameId], references: [id])
+  cashGameId        String    @map("cash_game_id") @db.Uuid
+  user              User      @relation(fields: [userId], references: [id])
+  userId            String    @map("user_id") @db.Uuid
+  registrationDate  DateTime  @db.Timestamp(0) @map("registration_date")
+  @@map("cash_game_registrations")
+}
+
+model Role {
+  id                String    @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+  name              String    @db.VarChar(255)
+  users             User[]
+  @@map("roles")
+}
+
+model Team {
+  id                String    @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
+  name              String    @db.VarChar(255)
+  users             User[]
+  @@map("teams")
+}
+
+model Tournament {
+  id                      String      @id @unique @default(uuid()) @db.Uuid
+  createdAt               DateTime    @default(now()) @map("created_at")
+  updatedAt               DateTime    @default(now()) @updatedAt @map("updated_at")
+  scheduledAt             DateTime?   @db.Timestamp(0) @map("scheduled_at")
+  lateRegistrationAt      DateTime?   @db.Timestamp(0) @map("late_registration_at")
+  name                    String      @db.VarChar(255)
+  buyIn                   Float?      @map("buy_in")
+  countEntries            Int?        @map("count_entries")
+  maxRegistrations        Int?        @map("max_registrations")
+  prizePool               Float?      @map("prize_pool")
+  reentry                 Boolean?    @default(false)
+  multipleDays            Boolean?    @default(false) @map("multiple_days")
+  category                TournamentCategory?  @relation("TournamentCategoryTournaments", fields: [tournamentCategoryId], references: [id])
+  tournamentCategoryId    String?     @map("tournament_category_id") @db.Uuid
+  imgPath                 String?     @db.VarChar(255) @map("img_path")
+  tournamentRegistrations TournamentRegistration[]
+  tournamentResults       TournamentResult[]
+  @@map("tournaments")
+}
+
+model TournamentCategory {
+  id          String    @id @unique @default(uuid()) @db.Uuid
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @default(now()) @updatedAt @map("updated_at")
+  name        String    @db.VarChar(255)
+  tournaments Tournament[] @relation("TournamentCategoryTournaments")
+  @@map("tournament_categories")
+}
+
+model TournamentRegistration {
+  id                String      @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @default(now()) @updatedAt @map("updated_at")
+  tournament        Tournament  @relation(fields: [tournamentId], references: [id])
+  tournamentId      String      @map("tournament_id") @db.Uuid
+  user              User        @relation(fields: [userId], references: [id])
+  userId            String      @map("user_id") @db.Uuid
+  registrationDate  DateTime    @db.Timestamp(0) @map("registration_date")
+  @@map("tournament_registrations")
+}
+
+model TournamentResult {
+  id                String      @id @unique @default(uuid()) @db.Uuid
+  createdAt         DateTime    @default(now()) @map("created_at")
+  updatedAt         DateTime    @default(now()) @updatedAt @map("updated_at")
+  position          Int?
+  prize             Float?
+  tournament        Tournament  @relation(fields: [tournamentId], references: [id])
+  tournamentId      String      @map("tournament_id") @db.Uuid
+  user              User        @relation(fields: [userId], references: [id])
+  userId            String      @map("user_id") @db.Uuid
+  @@map("tournament_results")
+}
+
+model User {
+  id                        String    @id @unique @default(uuid()) @db.Uuid
+  createdAt                 DateTime  @default(now()) @map("created_at")
+  updatedAt                 DateTime  @default(now()) @updatedAt @map("updated_at")
+  email                     String    @unique @db.VarChar(255)
+  password                  String    @db.VarChar(255)
+  lastName                  String    @db.VarChar(255) @map("last_name")
+  firstName                 String    @db.VarChar(255) @map("first_name")
+  nickName                  String?   @db.VarChar(255) @map("nick_name")
+  isMember                  Boolean   @default(false) @map("is_member")
+  roleId                    String    @map("role_id") @db.Uuid
+  role                      Role      @relation(fields: [roleId], references: [id])
+  teamId                    String?   @map("team_id") @db.Uuid
+  team                      Team?     @relation(fields: [teamId], references: [id])
+  tournamentRegistrations   TournamentRegistration[]
+  tournamentResults         TournamentResult[]
+  cashGamePlayed            CashGameRegistration[]
+  cashGameOrganized         CashGame[]
+  @@map("users")
+}

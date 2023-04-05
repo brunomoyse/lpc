@@ -31,7 +31,9 @@
                         <tr
                                 v-for="(player, index) in players"
                                 :key="player.id"
-                                :class="index % 2 === 1 ? 'bg-black bg-opacity-10' : ''">
+                                :class="index % 2 === 1 ? 'bg-black bg-opacity-10' : ''"
+                                @click="goToPlayerDetails(player)"
+                        >
                             <td class="pl-4">
                                 {{ player.position }}
                             </td>
@@ -103,6 +105,8 @@
 // imports
 import { User, TournamentRegistration } from "@prisma/client";
 import {Ref} from "vue";
+
+const router = useRouter();
 
 // data
 const paginationSettings = reactive({
@@ -194,6 +198,10 @@ const getUsers = async (): Promise<Ref> => {
 };
 
 let players = await getUsers();
+
+const goToPlayerDetails = (player: User) => {
+    router.push(`/users/${player.id}`);
+};
 
 const getTournamentFinals = (tournamentResults: any) => {
     let finals = 0;

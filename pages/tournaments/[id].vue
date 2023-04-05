@@ -112,7 +112,7 @@ let showTableResults = ref(false);
 
 // methods
 const getTournament = async (tournamentId: string): Promise<Ref> => {
-    let {data, pending, refresh, error} = await useFetch('http://localhost:3000/api/graphql', {
+    const {data, pending, refresh, error} = await useFetch('http://localhost:3000/api/graphql', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

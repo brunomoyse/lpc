@@ -1,101 +1,97 @@
 <template>
-    <div>
-        <!-- Component Start -->
-        <div class="flex flex-col mt-6">
-            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                    <div class="shadow overflow-hidden sm:rounded-lg">
-                        <table class="min-w-full text-sm">
-                            <thead class="bg-gray-600 text-xs uppercase font-medium text-white">
-                                <tr>
-                                    <th></th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        Joueur
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        TP
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        ITM
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        TF
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        Victoires
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                        Last 5
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-gray-100">
-                                <tr
-                                    v-for="(player, index) in players"
-                                    :key="player.id"
-                                    :class="index % 2 === 1 ? 'bg-black bg-opacity-10' : ''">
-                                    <td class="pl-4">
-                                        {{ player.position }}
-                                    </td>
-                                    <td class="flex px-6 py-4 whitespace-nowrap">
-                                        <img
-                                            class="w-5 h-5 rounded-full"
-                                            :src="'/users/avatar_' + (index + 1) + '.png'"
-                                            :alt="'Avatar de ' + player.firstName + ' ' + player.lastName"
-                                            :title="player.firstName + ' ' + player.lastName"
-                                        >
-                                        <span class="ml-2 font-medium">
+    <div class="flex flex-col mt-6">
+        <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div class="shadow overflow-hidden sm:rounded-lg">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-gray-600 text-xs uppercase font-medium text-white">
+                        <tr>
+                            <th></th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                Joueur
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                TP
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                ITM
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                TF
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                Victoires
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                                Last 5
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="bg-gray-100">
+                        <tr
+                                v-for="(player, index) in players"
+                                :key="player.id"
+                                :class="index % 2 === 1 ? 'bg-black bg-opacity-10' : ''">
+                            <td class="pl-4">
+                                {{ player.position }}
+                            </td>
+                            <td class="flex px-6 py-4 whitespace-nowrap">
+                                <img
+                                        class="w-5 h-5 rounded-full"
+                                        :src="'/users/avatar_' + (index + 1) + '.png'"
+                                        :alt="'Avatar de ' + player.firstName + ' ' + player.lastName"
+                                        :title="player.firstName + ' ' + player.lastName"
+                                >
+                                <span class="ml-2 font-medium">
                                             {{ player.firstName + ' ' + player.lastName }}
                                         </span>
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ getTournamentsPlayed(player.tournamentRegistrations) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ player.tournamentResults.length }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ getTournamentFinals(player.tournamentResults) }}
-                                    </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ getTournamentWins(player.tournamentResults) }}
-                                    </td>
-                                    <td class="flex px-6 py-4 whitespace-nowrap">
-                                        <template v-for="recentGame in checkResults(player.tournamentRegistrations, player.tournamentResults)" :key="player.tournamentRegistrations.id">
-                                            <svg v-if="recentGame === 'ITM'" class="w-4 fill-current text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="ITM">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                            <svg v-else-if="recentGame === 'TF'" class="w-4 fill-current text-purple-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="TF">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                            <svg v-else-if="recentGame === 'V'" class="w-4 fill-current text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="Vainqueur">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                            <svg v-else class="w-4 fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
-                                            </svg>
-                                        </template>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="mt-4 flex justify-between">
-                            <button
-                                    @click="prevPage"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                                    :disabled="paginationSettings.skippedCount === 0"
-                            >
-                                Previous
-                            </button>
-                            <button
-                                    @click="nextPage"
-                                    :disabled="!hasMoreData"
-                                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                Next
-                            </button>
-                        </div>
-
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ getTournamentsPlayed(player.tournamentRegistrations) }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ player.tournamentResults.length }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ getTournamentFinals(player.tournamentResults) }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {{ getTournamentWins(player.tournamentResults) }}
+                            </td>
+                            <td class="flex px-6 py-4 whitespace-nowrap">
+                                <template v-for="recentGame in checkResults(player.tournamentRegistrations, player.tournamentResults)" :key="player.tournamentRegistrations.id">
+                                    <svg v-if="recentGame === 'ITM'" class="w-4 fill-current text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="ITM">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <svg v-else-if="recentGame === 'TF'" class="w-4 fill-current text-purple-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="TF">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <svg v-else-if="recentGame === 'V'" class="w-4 fill-current text-green-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="Vainqueur">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                    </svg>
+                                    <svg v-else class="w-4 fill-current text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" clip-rule="evenodd" />
+                                    </svg>
+                                </template>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-4 flex justify-between">
+                        <button
+                                @click="prevPage"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                                :disabled="paginationSettings.skippedCount === 0"
+                        >
+                            Previous
+                        </button>
+                        <button
+                                @click="nextPage"
+                                :disabled="!hasMoreData"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            Next
+                        </button>
                     </div>
                 </div>
             </div>

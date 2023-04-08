@@ -4,7 +4,7 @@
         <div>
             <div class="mb-7">
                 <div class="text-lg font-semibold">Début</div>
-                <div v-if="tournament?.scheduledAt">{{ getDateFormated(tournament.scheduledAt) }}</div>
+                <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.scheduledAt) }}</div>
             </div>
 
             <div class="mb-7">
@@ -105,6 +105,8 @@ const icons = [
 ];
 const displayedRegistrations = 6;
 
+const config = useRuntimeConfig();
+
 const {params} = useRoute();
 const tournamentId: string = params.id as string
 
@@ -112,7 +114,7 @@ let showTableResults = ref(false);
 
 // methods
 const getTournament = async (tournamentId: string): Promise<Ref> => {
-    const {data, pending, refresh, error} = await useFetch('http://localhost:3000/api/graphql', {
+    const {data, pending, refresh, error} = await useFetch(config.public.apiBase, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -168,7 +170,7 @@ const getTournament = async (tournamentId: string): Promise<Ref> => {
     else throw createError({statusCode: 404, message: 'Le tournoi n\'a pas été trouvé'});
 };
 
-const getDateFormated = (date: Date) => {
+const getDateFormatted = (date: Date) => {
     const dateObj = new Date(date);
     return dateObj.toLocaleString('fr-FR', {
         weekday: "long",

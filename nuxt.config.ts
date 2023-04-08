@@ -20,6 +20,11 @@ export default defineNuxtConfig({
         // Optional: config
         url: '/api/graphql',
     },
+    runtimeConfig: {
+        public: {
+            apiBase: process.env.GRAPHQL_ENDPOINT
+        }
+    },
     app: {
         pageTransition: { name: 'page', mode: 'out-in' },
         head: {

@@ -107,6 +107,7 @@ import { User, TournamentRegistration } from "@prisma/client";
 import {Ref} from "vue";
 
 const router = useRouter();
+const config = useRuntimeConfig();
 
 // data
 const paginationSettings = reactive({
@@ -140,10 +141,9 @@ const prevPage = async () => {
     players = await getUsers();
 };
 
-
 // methods
 const getUsers = async (): Promise<Ref> => {
-    let { data, pending, refresh, error } = await useFetch('http://localhost:3000/api/graphql', {
+    let { data, pending, refresh, error } = await useFetch(config.public.apiBase, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -25,6 +25,8 @@
     // imports
     import { Tournament } from "@prisma/client";
 
+    const config = useRuntimeConfig();
+
     // data
     const paginationSettings = {
         perPage: 5,
@@ -33,7 +35,7 @@
 
     // methods
     const getTournaments = async (): Promise<[Tournament]> => {
-        let { data, pending, refresh, error } = await useFetch('http://localhost:3000/api/graphql', {
+        let { data, pending, refresh, error } = await useFetch(config.public.apiBase, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

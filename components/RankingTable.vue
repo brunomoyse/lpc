@@ -1,29 +1,31 @@
 <template>
-    <div class="flex flex-col mt-6">
+    <div class="flex flex-col mt-6 -mx-4">
         <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
                 <div class="shadow overflow-hidden sm:rounded-lg">
                     <table class="min-w-full text-sm">
                         <thead class="bg-gray-600 text-xs uppercase font-medium text-white">
                         <tr>
-                            <th></th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                            <th class="pl-4"></th>
+                            <th scope="col" class="px-2 py-3 text-left tracking-wider">
                                 Joueur
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                            <!--
+                            <th scope="col" class="pl-3 py-3 text-left tracking-wider w-10">
                                 TP
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                            -->
+                            <th scope="col" class="pl-3 py-3 text-left tracking-wider w-10">
                                 ITM
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
+                            <th scope="col" class="pl-3 py-3 text-left tracking-wider w-10">
                                 TF
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                Victoires
+                            <th scope="col" class="pl-3 py-3 text-left tracking-wider w-10">
+                                V
                             </th>
-                            <th scope="col" class="px-6 py-3 text-left tracking-wider">
-                                Last 5
+                            <th scope="col" class="px-2 py-3 text-left tracking-wider">
+                                Forme
                             </th>
                         </tr>
                         </thead>
@@ -31,36 +33,39 @@
                         <tr
                                 v-for="(player, index) in players"
                                 :key="player.id"
-                                :class="index % 2 === 1 ? 'bg-black bg-opacity-10' : ''"
+                                :class="index % 2 === 1 ? 'bg-black bg-opacity-10 text-xs' : 'text-xs'"
                                 @click="goToPlayerDetails(player)"
                         >
                             <td class="pl-4">
                                 {{ player.position }}
                             </td>
-                            <td class="flex px-6 py-4 whitespace-nowrap">
+                            <td class="flex px-2 py-4 whitespace-nowrap">
+                                <!--
                                 <img
                                         class="w-5 h-5 rounded-full"
                                         :src="'/users/avatar_' + (index + 1) + '.png'"
                                         :alt="'Avatar de ' + player.firstName + ' ' + player.lastName"
                                         :title="player.firstName + ' ' + player.lastName"
-                                >
-                                <span class="ml-2 font-medium">
-                                            {{ player.firstName + ' ' + player.lastName }}
-                                        </span>
+                                /> -->
+                                <span class="font-medium">
+                                    {{ player.firstName + ' ' + player.lastName }}
+                                </span>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <!--
+                            <td class="pl-3 py-4 whitespace-nowrap w-10">
                                 {{ getTournamentsPlayed(player.tournamentRegistrations) }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            -->
+                            <td class="pl-3 py-4 whitespace-nowrap w-10">
                                 {{ player.tournamentResults.length }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="pl-3 py-4 whitespace-nowrap w-10">
                                 {{ getTournamentFinals(player.tournamentResults) }}
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
+                            <td class="pl-3 py-4 whitespace-nowrap w-10">
                                 {{ getTournamentWins(player.tournamentResults) }}
                             </td>
-                            <td class="flex px-6 py-4 whitespace-nowrap">
+                            <td class="flex px-2 py-4 whitespace-nowrap">
                                 <template v-for="recentGame in checkResults(player.tournamentRegistrations, player.tournamentResults)" :key="player.tournamentRegistrations.id">
                                     <svg v-if="recentGame === 'ITM'" class="w-4 fill-current text-blue-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" title="ITM">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -232,8 +237,9 @@ const getTournamentsPlayed = (tournamentRegistrations: any) => {
 }
 
 const checkResults = (tournamentRegistrations: any, tournamentResults: any) => {
+    const tournamentDisplayed = 3;
     tournamentRegistrations = tournamentRegistrations.slice(0, 20);
-    tournamentResults = tournamentResults.slice(0, 5);
+    tournamentResults = tournamentResults.slice(0, tournamentDisplayed);
 
     let results: string[] = [];
 
@@ -260,7 +266,7 @@ const checkResults = (tournamentRegistrations: any, tournamentResults: any) => {
         results.push(resultForRegistration);
     });
 
-    return results.slice(0, 5);
+    return results.slice(0, tournamentDisplayed);
 }
 
 let hasMoreData = ref(!(players.value.length < paginationSettings.perPage));

@@ -1,80 +1,109 @@
 <template>
     <div>
-        <h2 class="text-2xl font-bold mb-4">{{ tournament.name }}</h2>
-        <div>
-            <div class="mb-7">
-                <div class="text-lg font-semibold">Début</div>
-                <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.scheduledAt) }}</div>
+        <div  class="grid grid-cols-2 gap-4">
+            <h2 class="text-2xl font-bold mb-4">{{ tournament.name }}</h2>
+            <div class="mb-7 flex justify-end">
+                <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 mx-2 rounded">
+                    S'inscrire
+                </button>
             </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <div class="mb-7">
-                <div class="text-lg font-semibold mb-2">Détail du tournoi</div>
-                <div v-for="(icon, index) in icons" :key="index">
-                    <div class="flex flex-row items-center mb-3">
-                        <div class="mr-4">
-                            <nuxt-img
+            <!-- Détail du tournoi -->
+            <div>
+                <div class="mb-7">
+                    <div class="text-lg font-semibold">Début</div>
+                    <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.scheduledAt) }}</div>
+                </div>
+
+                <div class="mb-7">
+                    <div class="text-lg font-semibold mb-2">Détail du tournoi</div>
+                    <div v-for="(icon, index) in icons" :key="index">
+                        <div class="flex flex-row items-center mb-3">
+                            <div class="mr-4">
+                                <nuxt-img
                                     :alt="icon.text"
                                     :src="icon.path"
                                     format="svg"
                                     height="30px"
                                     width="30px"
-                            />
+                                />
+                            </div>
+                            <div>{{ icon.text }}</div>
                         </div>
-                        <div>{{ icon.text }}</div>
                     </div>
                 </div>
             </div>
-
-            <div class="mb-7">
-                <div class="text-lg font-semibold mb-2">
-                    Les inscrits
-                </div>
-                <div class="flex -space-x-4">
-                    <template v-for="(registration, index) in tournament.tournamentRegistrations">
-                        <img
+            <!-- Players info -->
+            <div>
+                <!-- Les inscrits -->
+                <div class="mb-7">
+                    <div class="text-lg font-semibold mb-2">
+                        Inscrits
+                    </div>
+                    <div class="flex -space-x-4">
+                        <template v-for="(registration, index) in tournament.tournamentRegistrations">
+                            <img
                                 v-if="index < displayedRegistrations"
                                 :src="'/users/avatar_' + (index + 1) + '.png'"
                                 :title="registration.user.firstName + ' ' + registration.user.lastName"
                                 alt=""
                                 class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
-                        >
-                    </template>
-                    <a
+                            >
+                        </template>
+                        <a
                             v-if="tournament._count.tournamentRegistrations > displayedRegistrations"
                             class="flex justify-center items-center w-12 h-12 text-xs font-medium bg-gray-300 rounded-full border-2 border-white hover:bg-gray-600"
-                    >
-                        + {{ tournament._count.tournamentRegistrations - displayedRegistrations }}
-                    </a>
+                        >
+                            + {{ tournament._count.tournamentRegistrations - displayedRegistrations }}
+                        </a>
+                    </div>
+                </div>
+                <!-- Payés -->
+                <div class="mb-7" v-if="tournament?.tournamentResults && tournament.tournamentResults.length > 0">
+                    <div class="text-lg font-semibold mb-2">
+                        Payés
+                    </div>
+                    <div class="flex -space-x-4">
+                        <template v-for="(registration, index) in tournament.tournamentResults">
+                            <img
+                                v-if="index < displayedRegistrations"
+                                :src="'/users/avatar_' + (index + 1) + '.png'"
+                                :title="registration.user.firstName + ' ' + registration.user.lastName"
+                                alt=""
+                                class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
+                            >
+                        </template>
+                        <a
+                            v-if="tournament._count.tournamentRegistrations > displayedRegistrations"
+                            class="flex justify-center items-center w-12 h-12 text-xs font-medium bg-gray-300 rounded-full border-2 border-white hover:bg-gray-600"
+                        >
+                            + {{ tournament._count.tournamentRegistrations - displayedRegistrations }}
+                        </a>
+                    </div>
                 </div>
             </div>
 
-            <div class="mb-7 flex justify-around">
-                <button class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 mx-2 rounded">
-                    S'inscrire
-                </button>
-                <button @click="toggleResultsTable" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 mx-2 rounded">
-                    Résultats
-                </button>
-            </div>
-
-            <div class="overflow-x-auto" v-if="showTableResults">
-                <table class="min-w-full bg-white divide-y divide-gray-200 shadow-md">
-                    <thead class="bg-gray-500 text-white">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Pos.</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Joueur</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold uppercase tracking-wider">Résulat</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        <tr v-for="result in tournament.tournamentResults" :key="result.id">
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.position }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.user.firstName + ' ' + result.user.lastName }}</td>
-                            <td class="px-6 py-4 whitespace-nowrap">{{ result.prize }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        </div>
+        <!-- Liste résulat -->
+        <div class="overflow-x-auto -mx-4" v-if="showTableResults">
+            <table class="min-w-full bg-white divide-y divide-gray-200 shadow-md">
+                <thead class="bg-gray-500 text-white">
+                <tr>
+                    <th class="px-2 py-3 text-center text-xs font-bold uppercase tracking-wider w-16">Pos.</th>
+                    <th class="px-2 py-3 text-left text-xs font-bold uppercase tracking-wider">Joueur</th>
+                    <th class="px-2 py-3 text-left text-xs font-bold uppercase tracking-wider">Résulat</th>
+                </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="result in tournament.tournamentResults" :key="result.id">
+                    <td class="px-2 py-4 whitespace-nowrap text-center w-16">{{ result.position }}</td>
+                    <td class="px-2 py-4 whitespace-nowrap">{{ result.user.firstName + ' ' + result.user.lastName }}</td>
+                    <td class="px-2 py-4 whitespace-nowrap">{{ formatPrize(result.prize) }}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>
@@ -187,8 +216,8 @@ const getHourOnly = (date: string) => {
     return dateObj.toLocaleString('fr-FR', {hour: 'numeric', minute: 'numeric'});
 }
 
-const toggleResultsTable = () => {
-    showTableResults.value = !showTableResults.value;
+const formatPrize = (prize: number) => {
+    return Math.floor(prize).toLocaleString('fr-BE', {style:"currency", currency:"EUR", minimumFractionDigits: 0});
 }
 
 // fetching data

@@ -32,34 +32,39 @@
 
                     <!-- Tags -->
                     <div class="grid grid-cols-2">
-                        <div></div>
-                        <div></div>
+                        <!-- Buy-in -->
+                        <div>
+                            <div class="flex flex-row items-center mb-3">
+                                <div class="mr-4">
+                                    <nuxt-img
+                                        alt="Buy-in amount"
+                                        src="icons/cash.svg"
+                                        format="svg"
+                                        height="30px"
+                                        width="30px"
+                                    />
+                                </div>
+                                <div>{{ tournament.buyIn }}€ (+ 5€)</div>
+                            </div>
+                        </div>
                         <div v-for="tournamentTag in tournament.tournamentTags" :key="tournamentTag.id">
                             <div class="flex flex-row items-center mb-3">
                                 <div class="mr-4">
+                                    <nuxt-img
+                                        :alt="tournamentTag.name"
+                                        :src="tournamentTag.icon"
+                                        format="svg"
+                                        height="30px"
+                                        width="30px"
+                                    />
                                 </div>
                                 <div>{{ tournamentTag.name }}</div>
                             </div>
                         </div>
                     </div>
-                    <!--
-                    <div v-for="(icon, index) in icons" :key="index" class="grid grid-cols-2">
-                        <div class="flex flex-row items-center mb-3">
-                            <div class="mr-4">
-                                <nuxt-img
-                                    :alt="icon.text"
-                                    :src="icon.path"
-                                    format="svg"
-                                    height="30px"
-                                    width="30px"
-                                />
-                            </div>
-                            <div>{{ icon.text }}</div>
-                        </div>
-                    </div>
-                    -->
                 </div>
             </div>
+
             <!-- Players info -->
             <div>
                 <!-- Les inscrits -->
@@ -139,24 +144,6 @@ import {Tournament} from "@prisma/client";
 import {Ref} from "vue";
 
 // data
-const icons = [
-    {
-        title: 'buyin',
-        text: '25€ + 5€',
-        path: `icons/cash.svg`
-    },
-    {
-        title: 'sixmax',
-        text: '6-max',
-        path: `icons/group.svg`
-    },
-    {
-        title: 'bounty',
-        text: 'Tournoi bounty',
-        path: `icons/target.svg`
-    },
-
-];
 const displayedRegistrations = 6;
 
 const config = useRuntimeConfig();
@@ -211,6 +198,7 @@ const getTournament = async (tournamentId: string): Promise<Ref<Tournament>> => 
                     tournamentTags {
                         id
                         name
+                        icon
                     }
                     _count {
                         tournamentRegistrations

@@ -30,6 +30,7 @@ type TournamentTag {
     createdAt: DateTime!
     updatedAt: DateTime!
     name: String!
+    icon: String
     tournaments: [Tournament]
 }
 

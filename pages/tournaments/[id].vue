@@ -10,16 +10,40 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            <!-- Détail du tournoi -->
+            <!-- Block infos du tournoi -->
             <div>
-                <div class="mb-7">
-                    <div class="text-lg font-semibold">Début</div>
-                    <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.scheduledAt) }}</div>
+                <!-- Début / Late reg-->
+                <div class="grid grid-cols-2">
+                    <!-- Début-->
+                    <div class="mb-7">
+                        <div class="text-lg font-semibold">Début</div>
+                        <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.scheduledAt) }}</div>
+                    </div>
+                    <!-- Late reg -->
+                    <div class="mb-7">
+                        <div class="text-lg font-semibold">Inscr. tardives</div>
+                        <div v-if="tournament?.scheduledAt">{{ getDateFormatted(tournament.lateRegistrationAt) }}</div>
+                    </div>
                 </div>
 
+                <!-- Détail du tournoi -->
                 <div class="mb-7">
                     <div class="text-lg font-semibold mb-2">Détail du tournoi</div>
-                    <div v-for="(icon, index) in icons" :key="index">
+
+                    <!-- Tags -->
+                    <div class="grid grid-cols-2">
+                        <div></div>
+                        <div></div>
+                        <div v-for="tournamentTag in tournament.tournamentTags" :key="tournamentTag.id">
+                            <div class="flex flex-row items-center mb-3">
+                                <div class="mr-4">
+                                </div>
+                                <div>{{ tournamentTag.name }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--
+                    <div v-for="(icon, index) in icons" :key="index" class="grid grid-cols-2">
                         <div class="flex flex-row items-center mb-3">
                             <div class="mr-4">
                                 <nuxt-img
@@ -33,12 +57,13 @@
                             <div>{{ icon.text }}</div>
                         </div>
                     </div>
+                    -->
                 </div>
             </div>
             <!-- Players info -->
             <div>
                 <!-- Les inscrits -->
-                <div class="mb-7">
+                <div class="mb-7" v-if="tournament?.tournamentRegistrations && tournament.tournamentRegistrations.length > 0">
                     <div class="text-lg font-semibold mb-2">
                         Inscrits
                     </div>
@@ -142,7 +167,7 @@ const tournamentId: string = params.id as string
 let showTableResults = ref(false);
 
 // methods
-const getTournament = async (tournamentId: string): Promise<Ref> => {
+const getTournament = async (tournamentId: string): Promise<Ref<Tournament>> => {
     const {data, pending, refresh, error} = await useFetch(config.public.apiBase, {
         method: 'POST',
         headers: {
@@ -206,12 +231,12 @@ const getTournament = async (tournamentId: string): Promise<Ref> => {
 const getDateFormatted = (date: Date) => {
     const dateObj = new Date(date);
     return dateObj.toLocaleString('fr-FR', {
-        weekday: "long",
-        year: 'numeric',
-        month: "long",
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
+        weekday: "short",
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "numeric"
     });
 }
 

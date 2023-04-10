@@ -45,12 +45,13 @@ extend type Mutation {
     createTournamentRegistration(
         tournamentId: ID!
         userId: ID!
-    ): TournamentRegistration
+    ): Tournament
 
-    # Unsign a user from a tournament
+    # UnSign a user from a tournament
     deleteTournamentRegistration(
-        id: ID!
-    ): TournamentRegistration
+        tournamentId: ID!
+        userId: ID!
+    ): Tournament
 
     # Add a new tournament tag
     createTournamentTag(

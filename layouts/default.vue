@@ -24,7 +24,7 @@
                             data-dropdown-toggle="userDropdown"
                             data-dropdown-placement="bottom-start"
                             class="w-10 h-10 rounded-full cursor-pointer"
-                            src="/users/avatar_2.png"
+                            src="/users/avatar_1.png"
                             alt="User dropdown"
                             @click="toggleDropdownMenu"
                         />

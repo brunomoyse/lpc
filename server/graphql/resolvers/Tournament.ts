@@ -214,21 +214,37 @@ export const createTournamentRegistration = async (args: any) => {
         }
     }
 
-    return await prisma.tournamentRegistration.create({
+    await prisma.tournamentRegistration.create({
         data: args,
         include: {
             user: true,
             tournament: true
         }
     })
+
+    return await getTournament({id: args.tournamentId})
 }
 
 export const deleteTournamentRegistration = async (args: any) => {
-    return await prisma.tournamentRegistration.delete({
+    // check if the user is already registered for this tournament
+    const existingRegistration = await prisma.tournamentRegistration.findFirst({
         where: {
-            id: args.id
+            userId: args.userId,
+            tournamentId: args.tournamentId
+        }
+    });
+    // if no existingRegistration, then throw error
+    if (!existingRegistration) {
+        throw new Error('The user is not registered for this tournament')
+    }
+
+    await prisma.tournamentRegistration.deleteMany({
+        where: {
+            userId: args.userId,
+            tournamentId: args.tournamentId
         }
     })
+    return await getTournament({id: args.tournamentId})
 }
 
 export const createTournamentTag = async (args: any) => {

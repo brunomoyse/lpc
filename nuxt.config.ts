@@ -8,7 +8,8 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@nuxt/image-edge',
-        'nuxt-graphql-server'
+        'nuxt-graphql-server',
+        '@pinia/nuxt'
     ],
     buildModules: [
         '@nuxt/image-edge',
@@ -19,6 +20,13 @@ export default defineNuxtConfig({
     graphqlServer: {
         // Optional: config
         url: '/api/graphql',
+    },
+    pinia: {
+        autoImports: [
+            // automatically imports `defineStore`
+            'defineStore', // import { defineStore } from 'pinia'
+            ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+        ],
     },
     runtimeConfig: {
         public: {

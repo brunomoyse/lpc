@@ -25,6 +25,18 @@ Start the development server on http://localhost:3000
 npm run dev
 ```
 
+Migrate the changes made to the Prisma schema
+
+```bash
+prisma migrate dev --name job_name
+```
+
+Regenerate the Prisma client
+
+```bash
+prisma generate
+```
+
 ## Production
 
 Build the application for production:

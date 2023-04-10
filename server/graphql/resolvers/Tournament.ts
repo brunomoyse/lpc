@@ -24,6 +24,16 @@ export const getTournaments = async ({
     };
 
     const whereConditions: any  = {
+        ...(startingRange && {
+            scheduledAt: {
+                gte: startingRange,
+            },
+        }),
+        ...(endingRange && {
+            scheduledAt: {
+                lte: endingRange,
+            },
+        }),
         ...(startingRange && endingRange && {
             scheduledAt: {
                 gte: startingRange,

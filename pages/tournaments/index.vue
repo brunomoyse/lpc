@@ -4,7 +4,7 @@
         <h3 class="text-xl font-semibold">Tournois à venir</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 mb-8">
             <tournament-card
-                v-for="futureTournament in tournaments"
+                v-for="futureTournament in tournaments.futureTournaments"
                 :key="futureTournament.id"
                 :tournament="futureTournament"
             />
@@ -12,7 +12,7 @@
         <h3 class="text-xl font-semibold">Tournois passés</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 mb-8">
             <tournament-card
-                v-for="pastTournament in tournaments"
+                v-for="pastTournament in tournaments.pastTournaments"
                 :key="pastTournament.id"
                 :tournament="pastTournament"
             />
@@ -24,17 +24,18 @@
 <script setup lang="ts">
     // imports
     import { Tournament } from "@prisma/client";
+    import {Ref} from "vue";
 
     const config = useRuntimeConfig();
 
     // data
     const paginationSettings = {
-        perPage: 5,
+        perPage: 4,
         skippedCount : 0,
     }
 
     // methods
-    const getTournaments = async (): Promise<[Tournament]> => {
+    const getTournaments = async () => {
         let { data, pending, refresh, error } = await useFetch(config.public.apiBase, {
             method: 'POST',
             headers: {
@@ -49,11 +50,22 @@
                 $startingRange: Date
                 $endingRange: Date
             ) {
-                tournaments (
+                futureTournaments: tournaments (
                     take: $take
                     skip: $skip
                     userId: $userId
                     startingRange: $startingRange
+                ){
+                    id
+                    name
+                    scheduledAt
+                    lateRegistrationAt
+                    imgPath
+                }
+                pastTournaments: tournaments (
+                    take: $take
+                    skip: $skip
+                    userId: $userId
                     endingRange: $endingRange
                 ){
                     id
@@ -66,15 +78,19 @@
                 variables: {
                     take: paginationSettings.perPage,
                     skip: paginationSettings.skippedCount,
+                    startingRange: new Date().toISOString(),
+                    endingRange: new Date().toISOString()
                 }
-            })
+            }),
+            transform: (res: any) => res.data,
         });
         if (error?.value) console.log(error.value);
-        if (data?.value?.data?.tournaments) return data.value.data.tournaments as [Tournament];
+        if (data) return data;
         else throw createError({ statusCode: 404, message: 'Les tournois n\'ont pas été trouvés' });
     };
 
     // fetching data
-    let tournaments = await getTournaments();
+    let tournaments: Ref<{futureTournaments: [Tournament], pastTournaments: [Tournament]}> = await getTournaments();
+
 
 </script>

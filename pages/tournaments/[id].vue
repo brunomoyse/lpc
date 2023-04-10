@@ -3,7 +3,10 @@
         <div  class="grid grid-cols-2 gap-4">
             <h2 class="text-2xl font-bold mb-4">{{ tournament.name }}</h2>
             <div class="mb-7 flex justify-end">
-                <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 mx-2 rounded">
+                <button v-if="false" @click="displayUnsignUpModal" class="bg-gray-400 hover:bg-red-700 text-white font-bold py-2 px-4 mx-2 rounded">
+                    Se désinscrire
+                </button>
+                <button v-else @click="displaySignUpModal" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 mx-2 rounded">
                     S'inscrire
                 </button>
             </div>
@@ -114,9 +117,19 @@
                     </div>
                 </div>
             </div>
-
         </div>
+
+        <modal-confirm
+            :show="showModal"
+            :title="modalTitle"
+            :message="modalMessage"
+            :confirmText="modalConfirm"
+            :cancelText="modalCancel"
+            @confirm="confirmModal"
+            @cancel="cancelModal"/>
+
         <!-- Liste résulat -->
+        <!--
         <div class="overflow-x-auto -mx-4" v-if="showTableResults">
             <table class="min-w-full bg-white divide-y divide-gray-200 shadow-md">
                 <thead class="bg-gray-500 text-white">
@@ -135,6 +148,7 @@
                 </tbody>
             </table>
         </div>
+        -->
     </div>
 </template>
 
@@ -142,6 +156,7 @@
 // imports
 import {Tournament} from "@prisma/client";
 import {Ref} from "vue";
+import ModalConfirm from "~/components/ModalConfirm.vue";
 
 // data
 const displayedRegistrations = 6;
@@ -152,6 +167,12 @@ const {params} = useRoute();
 const tournamentId: string = params.id as string
 
 let showTableResults = ref(false);
+
+let showModal: Ref<boolean> = ref(false);
+let modalTitle: Ref<string> = ref('');
+let modalMessage: Ref<string> = ref('');
+let modalConfirm: Ref<string> = ref('');
+let modalCancel: Ref<string> = ref('');
 
 // methods
 const getTournament = async (tournamentId: string): Promise<Ref<Tournament>> => {
@@ -180,6 +201,7 @@ const getTournament = async (tournamentId: string): Promise<Ref<Tournament>> => 
                     multipleDays
                     imgPath
                     tournamentRegistrations {
+                        id
                         user {
                             id
                             firstName
@@ -216,6 +238,113 @@ const getTournament = async (tournamentId: string): Promise<Ref<Tournament>> => 
     else throw createError({statusCode: 404, message: 'Le tournoi n\'a pas été trouvé'});
 };
 
+const signUpTournament = async (tournamentId: string) => {
+    const userId = await getCurrentUserId();
+    const {data, pending, refresh, error} = await useFetch(config.public.apiBase, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `mutation (
+                $tournamentId: ID!
+                $userId: ID!
+            ) {
+                createTournamentRegistration (
+                    tournamentId: $tournamentId
+                    userId: $userId
+                ){
+                    id
+                }
+            }`,
+            variables: {
+                tournamentId: tournamentId,
+                userId: userId
+            }
+        }),
+        transform: (res: any) => res.data.createTournamentRegistration,
+    });
+    if (error?.value) console.error(error.value);
+    if (data) return data;
+    else throw createError({statusCode: 500, message: 'L\'inscription n\'a pas abouti'});
+};
+
+const unSignUpTournament = async (tournament: Tournament) => {
+    const userId = await getCurrentUserId();
+    // get last registration id in case of multiple registrations
+    const lastRegistration = tournament.tournamentRegistrations.find(registration => registration.user.id === userId);
+
+    const {data, pending, refresh, error} = await useFetch(config.public.apiBase, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({
+            query: `mutation (
+                $id: ID!
+            ) {
+                deleteTournamentRegistration (
+                    id: $id
+                ){
+                    id
+                }
+            }`,
+            variables: {
+                id: lastRegistration.id
+            }
+        }),
+        transform: (res: any) => res.data.deleteTournamentRegistration,
+    });
+    if (error?.value) console.error(error.value);
+    if (data) return data;
+    else throw createError({statusCode: 500, message: 'La désinscription n\'a pas abouti'});
+};
+
+const currentUserSignedUp = async (tournament: Tournament) => {
+    const userId = await getCurrentUserId();
+    const registrations = tournament.tournamentRegistrations;
+    const userSignedUp = registrations.find(registration => registration.user.id === userId);
+    console.log(!!userSignedUp);
+    return !!userSignedUp;
+}
+
+const getCurrentUserId = async () => {
+    // @todo get current user id
+    return '894284da-cd7c-11ed-afa1-0242ac120002';
+}
+
+const displaySignUpModal = () => {
+    modalTitle.value = 'Inscription au tournoi';
+    modalMessage.value = 'Voulez-vous vous inscrire à ce tournoi?';
+    modalConfirm.value = 'Confirmer';
+    modalCancel.value = 'Annuler';
+    showModal.value = true;
+}
+
+const displayUnsignUpModal = () => {
+    modalTitle.value = 'Désinscription du tournoi';
+    modalMessage.value = 'Voulez-vous annuler votre inscription à ce tournoi?';
+    modalConfirm.value = 'Confirmer';
+    modalCancel.value = 'Annuler';
+    showModal.value = true;
+}
+
+const confirmModal = async () => {
+    if (modalTitle.value === 'Inscription au tournoi')
+        await signUpTournament(tournamentId);
+    else if (modalTitle.value === 'Désinscription du tournoi') {
+        await unSignUpTournament(tournament.value);
+    }
+    showModal.value = false;
+}
+
+const cancelModal = () => {
+    showModal.value = false;
+}
+
+// utils
 const getDateFormatted = (date: Date) => {
     const dateObj = new Date(date);
     return dateObj.toLocaleString('fr-FR', {
@@ -226,11 +355,6 @@ const getDateFormatted = (date: Date) => {
         hour: "numeric",
         minute: "numeric"
     });
-}
-
-const getHourOnly = (date: string) => {
-    const dateObj = new Date(date);
-    return dateObj.toLocaleString('fr-FR', {hour: 'numeric', minute: 'numeric'});
 }
 
 const formatPrize = (prize: number) => {

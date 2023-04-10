@@ -45,7 +45,6 @@ extend type Mutation {
     createTournamentRegistration(
         tournamentId: ID!
         userId: ID!
-        registrationDate: DateTime
     ): TournamentRegistration
 
     # Unsign a user from a tournament

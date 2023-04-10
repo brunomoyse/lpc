@@ -69,11 +69,19 @@ export const resolvers: Resolvers = {
 
         // @ts-ignore
         createTournamentRegistration: async (parent, args, context, info) => {
+            const tournament = await getTournament({id: args.tournamentId});
+            if (tournament?.scheduledAt && new Date(tournament.scheduledAt) <= new Date()) {
+                throw new Error("Le tournoi a déjà débuté");
+            }
             return await createTournamentRegistration(args);
         },
 
         // @ts-ignore
         deleteTournamentRegistration: async (parent, args, context, info) => {
+            const tournament = await getTournament({id: args.tournamentId});
+            if (tournament?.scheduledAt && new Date(tournament.scheduledAt) <= new Date()) {
+                throw new Error("Le tournoi a déjà débuté");
+            }
             return await deleteTournamentRegistration(args);
         },
 

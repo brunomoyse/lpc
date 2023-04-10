@@ -10,13 +10,16 @@ export const useTournamentStore = defineStore({
     }),
     actions: {
         async getTournamentDetail(args: any) {
-            this.tournament = await useApiService.getTournamentDetail(args);
+            const tournament = await useApiService.getTournamentDetail(args);
+            if (tournament) this.tournament = tournament;
         },
         async registerTournament(args: any) {
-            this.tournament = await useApiService.registerTournament(args);
+            const updatedTournament = await useApiService.registerTournament(args);
+            if (updatedTournament) this.tournament = updatedTournament;
         },
         async unregisterTournament(args: any) {
-            this.tournament = await useApiService.unregisterTournament(args);
+            const updatedTournament = await useApiService.unregisterTournament(args);
+            if (updatedTournament) this.tournament = updatedTournament;
         }
 
     }

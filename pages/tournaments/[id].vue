@@ -54,14 +54,14 @@
                             <div class="flex flex-row items-center mb-3">
                                 <div class="mr-4">
                                     <nuxt-img
-                                        :alt="tournamentTag.name"
-                                        :src="tournamentTag.icon"
+                                        :alt="tournamentTag?.name"
+                                        :src="tournamentTag?.icon"
                                         format="svg"
                                         height="30px"
                                         width="30px"
                                     />
                                 </div>
-                                <div>{{ tournamentTag.name }}</div>
+                                <div>{{ tournamentTag?.name }}</div>
                             </div>
                         </div>
                     </div>
@@ -71,19 +71,21 @@
             <!-- Players info -->
             <div>
                 <!-- Les inscrits -->
-                <div class="mb-7" v-if="tournament?.tournamentRegistrations && tournament.tournamentRegistrations.length > 0">
+                <div class="mb-7" v-if="tournament?.tournamentRegistrations && tournament.tournamentRegistrations.length > 0 && tournament?.tournamentResults.length === 0">
                     <div class="text-lg font-semibold mb-2">
                         Inscrits
                     </div>
                     <div class="flex -space-x-4">
                         <template v-for="(registration, index) in tournament.tournamentRegistrations">
-                            <img
-                                v-if="index < displayedRegistrations"
-                                :src="'/users/avatar_' + (index + 1) + '.png'"
-                                :title="registration.user.firstName + ' ' + registration.user.lastName"
-                                alt=""
-                                class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
-                            >
+                            <nuxt-link :to="`/users/${registration.user.id}`">
+                                <img
+                                    v-if="index < displayedRegistrations"
+                                    :src="'/users/avatar_' + (index + 1) + '.png'"
+                                    :title="registration?.user?.firstName + ' ' + registration?.user?.lastName"
+                                    :alt="'avatar de ' + registration?.user?.firstName + ' ' + registration?.user?.lastName"
+                                    class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
+                                />
+                            </nuxt-link>
                         </template>
                         <a
                             v-if="tournament._count.tournamentRegistrations > displayedRegistrations"
@@ -100,13 +102,15 @@
                     </div>
                     <div class="flex -space-x-4">
                         <template v-for="(registration, index) in tournament.tournamentResults">
-                            <img
-                                v-if="index < displayedRegistrations"
-                                :src="'/users/avatar_' + (index + 1) + '.png'"
-                                :title="registration.user.firstName + ' ' + registration.user.lastName"
-                                alt=""
-                                class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
-                            >
+                            <nuxt-link :to="`/users/${registration.user.id}`">
+                                <img
+                                        v-if="index < displayedRegistrations"
+                                        :src="'/users/avatar_' + (index + 1) + '.png'"
+                                        :title="registration.user.firstName + ' ' + registration.user.lastName"
+                                        :alt="'avatar de ' + registration.user.firstName + ' ' + registration.user.lastName"
+                                        class="w-12 h-12 rounded-full border-2 border-white hover:shadow-lg hover:scale-105 transform transition duration-300"
+                                >
+                            </nuxt-link>
                         </template>
                         <a
                             v-if="tournament._count.tournamentRegistrations > displayedRegistrations"
@@ -155,19 +159,18 @@
 <script lang="ts" setup>
 // imports
 import {Tournament, TournamentRegistration} from "@/composables/types";
-import {Ref, computed} from "vue";
-import ModalConfirm from "~/components/ModalConfirm.vue";
 import { useTournamentStore } from "@/stores/tournamentStore";
 
-const tournamentStore = useTournamentStore();
+import ModalConfirm from "~/components/ModalConfirm.vue";
+
+
 
 // data
 const displayedRegistrations = 6;
 
-const config = useRuntimeConfig();
-
 const {params} = useRoute();
 const tournamentId: string = params.id as string
+const tournamentStore = useTournamentStore();
 await tournamentStore.getTournamentDetail({tournamentId});
 // @todo make it with a computed property
 //const tournament = computed(() => tournamentStore.tournament);
@@ -218,12 +221,13 @@ const displayUnregisterModal = () => {
 }
 
 const confirmModal = async () => {
+    showModal.value = false;
     if (modalTitle.value === 'Inscription au tournoi')
         await registerTournament(tournamentId);
     else if (modalTitle.value === 'Désinscription du tournoi') {
         await unregisterTournament(tournamentId);
     }
-    showModal.value = false;
+
 }
 
 const cancelModal = () => {

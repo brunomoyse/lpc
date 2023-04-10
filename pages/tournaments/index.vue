@@ -24,7 +24,6 @@
 <script setup lang="ts">
     // imports
     import { Tournament } from "@prisma/client";
-    import {Ref} from "vue";
 
     const config = useRuntimeConfig();
 
@@ -61,6 +60,9 @@
                     scheduledAt
                     lateRegistrationAt
                     imgPath
+                    tournamentTags {
+                        name
+                    }
                 }
                 pastTournaments: tournaments (
                     take: $take
@@ -73,6 +75,9 @@
                     scheduledAt
                     lateRegistrationAt
                     imgPath
+                    tournamentTags {
+                        name
+                    }
                 }
             }`,
                 variables: {

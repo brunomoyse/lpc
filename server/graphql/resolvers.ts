@@ -5,6 +5,7 @@ import {
     createTournament,
     createTournamentResult,
     createTournamentRegistration,
+    createTournamentTag,
     updateTournament,
     deleteTournamentRegistration,
     deleteTournamentResult,
@@ -79,6 +80,11 @@ export const resolvers: Resolvers = {
         // @ts-ignore
         createUser: async (parent, args, context, info) => {
             return await createUser(args)
+        },
+
+        // @ts-ignore
+        createTournamentTag: async (parent, args, context, info) => {
+            return await createTournamentTag(args)
         }
     }
 }

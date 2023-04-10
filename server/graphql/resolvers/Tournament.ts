@@ -55,7 +55,7 @@ export const getTournaments = async ({
                 user: true,
             },
         },
-        category: true,
+        tournamentTags: true,
         ...(userId && {
             tournamentResults: {
                 include: {
@@ -108,20 +108,49 @@ export const getTournament = async ({id}: {id: string}) => {
                     tournamentResults: true
                 }
             },
-            category: true
+            tournamentTags: true
         }
     });
 }
 
 export const createTournament = async (args: any) => {
-    return await prisma.tournament.create({
-        data: args,
+    // Extract tournamentTags from args and remove it from the object
+    const { tournamentTags, ...tournamentData } = args;
+
+    let createdTournament;
+
+    createdTournament = await prisma.tournament.create({
+        data: tournamentData,
         include: {
             tournamentRegistrations: true,
             tournamentResults: true,
-            category: true,
+            tournamentTags: true,
         }
     })
+
+
+    // If tournamentTags are provided, create the relationships
+    if (tournamentTags && tournamentTags.length > 0) {
+        for (const tagId of tournamentTags) {
+            await prisma.tournament.update({
+                where: { id: createdTournament.id },
+                data: {
+                    tournamentTags: {
+                        connect: {
+                            id: tagId,
+                        },
+                    },
+                },
+                include: {
+                    tournamentRegistrations: true,
+                    tournamentResults: true,
+                    tournamentTags: true,
+                }
+            });
+        }
+    }
+
+    return getTournament({id: createdTournament.id})
 }
 
 export const updateTournament = async (args: any) => {
@@ -199,5 +228,11 @@ export const deleteTournamentRegistration = async (args: any) => {
         where: {
             id: args.id
         }
+    })
+}
+
+export const createTournamentTag = async (args: any) => {
+    return await prisma.tournamentTag.create({
+        data: args
     })
 }

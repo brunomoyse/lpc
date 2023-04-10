@@ -163,7 +163,7 @@ const getTournament = async (tournamentId: string): Promise<Ref> => {
                     name
                     buyIn
                     maxRegistrations
-                    prizePool
+                    guaranteedPrizePool
                     reentry
                     multipleDays
                     imgPath
@@ -182,6 +182,10 @@ const getTournament = async (tournamentId: string): Promise<Ref> => {
                             firstName
                             lastName
                         }
+                    }
+                    tournamentTags {
+                        id
+                        name
                     }
                     _count {
                         tournamentRegistrations

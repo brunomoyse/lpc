@@ -6,11 +6,11 @@ extend type Mutation {
         name: String!
         buyIn: Float
         maxRegistrations: Int
-        prizePool: Float
+        guaranteedPrizePool: Float
         reentry: Boolean
         multipleDays: Boolean
-        tournamentCategoryId: ID
         imgPath: String
+        tournamentTags: [String!]
     ): Tournament!
 
     # Update tournament information
@@ -21,10 +21,10 @@ extend type Mutation {
         name: String
         buyIn: Float
         maxRegistrations: Int
-        prizePool: Float
+        guaranteedPrizePool: Float
         reentry: Boolean
         multipleDays: Boolean
-        tournamentCategoryId: ID
+        tournamentTags: [String!]
         imgPath: String
     ): Tournament!
 
@@ -52,4 +52,9 @@ extend type Mutation {
     deleteTournamentRegistration(
         id: ID!
     ): TournamentRegistration
+
+    # Add a new tournament tag
+    createTournamentTag(
+        name: String!
+    ): TournamentTag
 }

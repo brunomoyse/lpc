@@ -15,17 +15,17 @@ type Tournament {
     name: String!
     buyIn: Float
     maxRegistrations: Int
-    prizePool: Float
+    guaranteedPrizePool: Float
     reentry: Boolean
     multipleDays: Boolean
-    category: TournamentCategory
     imgPath: String
+    tournamentTags: [TournamentTag]
     tournamentRegistrations: [TournamentRegistration]
     tournamentResults: [TournamentResult]
     _count: Count
 }
 
-type TournamentCategory {
+type TournamentTag {
     id: String!
     createdAt: DateTime!
     updatedAt: DateTime!
@@ -39,7 +39,6 @@ type TournamentRegistration {
     updatedAt: DateTime!
     tournament: Tournament!
     user: User!
-    registrationDate: DateTime!
 }
 
 type TournamentResult {

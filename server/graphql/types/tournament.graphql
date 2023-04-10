@@ -43,6 +43,8 @@ type TournamentRegistration {
     updatedAt: DateTime!
     tournament: Tournament!
     user: User!
+    isReentry: Boolean
+    confirmed: Boolean
 }
 
 type TournamentResult {

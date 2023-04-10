@@ -95,6 +95,7 @@ model TournamentRegistration {
   user              User        @relation(fields: [userId], references: [id])
   userId            String      @map("user_id") @db.Uuid
   isReentry         Boolean     @default(false) @map("is_reentry")
+  confirmed         Boolean     @default(false)
   @@map("tournament_registrations")
 }
 

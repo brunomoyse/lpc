@@ -240,8 +240,10 @@ export type Tournament = {
 
 export type TournamentRegistration = {
   __typename?: 'TournamentRegistration';
+  confirmed?: Maybe<Scalars['Boolean']>;
   createdAt: Scalars['DateTime'];
   id: Scalars['String'];
+  isReentry?: Maybe<Scalars['Boolean']>;
   tournament: Tournament;
   updatedAt: Scalars['DateTime'];
   user: User;

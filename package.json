@@ -22,6 +22,7 @@
     "@apollo/server": "^4.5.0",
     "@as-integrations/h3": "^1.1.5",
     "@nuxt-modules/compression": "^0.1.0",
+    "@pinia/nuxt": "^0.4.8",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "graphql": "^16.6.0",
@@ -29,6 +30,10 @@
     "nexus": "^1.3.0",
     "nexus-prisma": "^1.0.4",
     "nuxt-graphql-server": "^1.2.2",
+    "pinia": "^2.0.34",
     "vite-plugin-compression": "^0.5.1"
+  },
+  "overrides": {
+    "vue": "latest"
   }
 }

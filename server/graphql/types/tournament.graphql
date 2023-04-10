@@ -19,9 +19,9 @@ type Tournament {
     reentry: Boolean
     multipleDays: Boolean
     imgPath: String
-    tournamentTags: [TournamentTag]
-    tournamentRegistrations: [TournamentRegistration]
-    tournamentResults: [TournamentResult]
+    tournamentTags: [TournamentTag!]
+    tournamentRegistrations: [TournamentRegistration!]
+    tournamentResults: [TournamentResult!]
     _count: Count
 }
 
@@ -31,7 +31,7 @@ type TournamentTag {
     updatedAt: DateTime!
     name: String!
     icon: String
-    tournaments: [Tournament]
+    tournaments: [Tournament!]
 }
 
 type TournamentRegistration {

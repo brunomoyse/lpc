@@ -154,7 +154,7 @@
 
 <script lang="ts" setup>
 // imports
-import {Tournament, TournamentRegistration} from "@prisma/client";
+import {Tournament, TournamentRegistration} from "@/composables/types";
 import {Ref, computed} from "vue";
 import ModalConfirm from "~/components/ModalConfirm.vue";
 import { useTournamentStore } from "@/stores/tournamentStore";

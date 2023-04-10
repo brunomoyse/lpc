@@ -86,7 +86,7 @@
 <script setup lang="ts">
 
 import {Ref} from "vue";
-import {Tournament, User, TournamentResult} from "@prisma/client";
+import {User, TournamentResult} from "@/composables/types";
 
 const config = useRuntimeConfig();
 

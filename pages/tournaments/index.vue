@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
     // imports
-    import { Tournament } from "@prisma/client";
+    import { Tournament } from "@/composables/types";
 
     const config = useRuntimeConfig();
 

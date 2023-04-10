@@ -218,13 +218,16 @@ export type Team = {
 export type Tournament = {
   __typename?: 'Tournament';
   _count?: Maybe<Count>;
+  avatarPath?: Maybe<Scalars['String']>;
   buyIn?: Maybe<Scalars['Float']>;
   createdAt: Scalars['DateTime'];
   guaranteedPrizePool?: Maybe<Scalars['Float']>;
   id: Scalars['String'];
   imgPath?: Maybe<Scalars['String']>;
+  isMember?: Maybe<Scalars['Boolean']>;
   lateRegistrationAt?: Maybe<Scalars['DateTime']>;
   maxRegistrations?: Maybe<Scalars['Int']>;
+  memberNumber?: Maybe<Scalars['String']>;
   multipleDays?: Maybe<Scalars['Boolean']>;
   name: Scalars['String'];
   reentry?: Maybe<Scalars['Boolean']>;

@@ -19,6 +19,9 @@ type Tournament {
     reentry: Boolean
     multipleDays: Boolean
     imgPath: String
+    isMember: Boolean
+    memberNumber: String
+    avatarPath: String
     tournamentTags: [TournamentTag!]
     tournamentRegistrations: [TournamentRegistration!]
     tournamentResults: [TournamentResult!]

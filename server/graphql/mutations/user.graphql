@@ -25,4 +25,9 @@ extend type Mutation {
     deleteUser(
         id: ID!
     ): User!
+
+    loginUser(
+        email: String!
+        password: String!
+    ): User!
 }

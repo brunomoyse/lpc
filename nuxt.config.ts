@@ -31,6 +31,9 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             apiBase: process.env.GRAPHQL_ENDPOINT
+        },
+        private: {
+            appSecret: process.env.APP_SECRET
         }
     },
     app: {

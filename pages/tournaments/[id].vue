@@ -3,7 +3,11 @@
         <div  class="grid grid-cols-2 gap-4">
             <h2 class="text-2xl font-bold mb-4">{{ tournament.name }}</h2>
             <div class="mb-7 flex justify-end">
-                <button v-if="isCurrentUserSignedUp" @click="displayUnregisterModal" class="bg-gray-400 hover:bg-red-700 text-white font-bold py-2 px-4 mx-2 rounded">
+                <button
+                        v-if="isCurrentUserSignedUp"
+                        @click="displayUnregisterModal"
+                        class="bg-gray-400 hover:bg-red-700 text-white font-bold py-2 px-4 mx-2 rounded"
+                >
                     Se désinscrire
                 </button>
                 <button v-else @click="displayRegisterModal" class="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 mx-2 rounded">

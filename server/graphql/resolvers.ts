@@ -14,6 +14,7 @@ import {
     getUsers,
     getUser,
     createUser,
+    loginUser
 } from "./resolvers/User";
 
 export const resolvers: Resolvers = {
@@ -86,13 +87,20 @@ export const resolvers: Resolvers = {
         },
 
         // @ts-ignore
+        createTournamentTag: async (parent, args, context, info) => {
+            return await createTournamentTag(args)
+        },
+
+        // @ts-ignore
         createUser: async (parent, args, context, info) => {
             return await createUser(args)
         },
 
         // @ts-ignore
-        createTournamentTag: async (parent, args, context, info) => {
-            return await createTournamentTag(args)
+        loginUser: async (parent, args, context, info) => {
+            console.log('context', context);
+            return await loginUser(args, context);
         }
+
     }
 }

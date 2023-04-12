@@ -1,11 +1,23 @@
-import { schema } from '#graphql/schema'
-import { ApolloServer } from '@apollo/server'
-import { startServerAndCreateH3Handler } from '@as-integrations/h3'
-import { resolvers } from '../graphql/resolvers'
+import { schema } from '#graphql/schema';
+import { ApolloServer } from '@apollo/server';
+import { startServerAndCreateH3Handler, H3ContextFunctionArgument } from '@as-integrations/h3';
+import { resolvers } from '../graphql/resolvers';
 
-const apollo = new ApolloServer({
+interface MyContext {
+    event: H3ContextFunctionArgument;
+}
+
+const apollo = new ApolloServer<MyContext>({
     typeDefs: schema,
     resolvers,
-})
+});
 
-export default startServerAndCreateH3Handler(apollo)
+const handler = startServerAndCreateH3Handler(apollo, {
+    context: async (event: H3ContextFunctionArgument): Promise<MyContext> => {
+        return {
+            event,
+        };
+    },
+});
+
+export default handler;

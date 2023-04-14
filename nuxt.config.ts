@@ -9,13 +9,8 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@nuxt/image-edge',
         'nuxt-graphql-server',
-        '@pinia/nuxt'
-    ],
-    buildModules: [
-        '@nuxt/image-edge',
-        ['@nuxt-modules/compression', {
-          // options
-        }]
+        '@pinia/nuxt',
+        '@nuxt-modules/compression'
     ],
     graphqlServer: {
         // Optional: config

@@ -40,6 +40,7 @@
     "vite-plugin-compression": "^0.5.1"
   },
   "overrides": {
-    "vue": "latest"
+    "vue": "latest",
+    "h3": "1.6.2"
   }
 }

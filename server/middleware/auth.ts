@@ -3,10 +3,7 @@ import { JwtPayload, verify } from "jsonwebtoken";
 import { parse } from "graphql";
 import { readBody } from "h3";
 import { getCookie } from "h3";
-import {useRouter} from "vue-router";
 const config = useRuntimeConfig();
-
-
 
 const checkIfLoginMutation = async (event: H3Event):Promise<Boolean> => {
     const body = await readBody(event);
@@ -44,7 +41,6 @@ const verifyToken = (event: H3Event) => {
         throw new Error("No token provided");
     }
 }
-
 
 export default defineEventHandler(async (event: H3Event) => {
     if (event.node.req.url !== "/" ) {

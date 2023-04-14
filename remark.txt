@@ -1,0 +1,1 @@
+remove overrides h3 package.json // waiting for the fix of https://github.com/unjs/h3/pull/369

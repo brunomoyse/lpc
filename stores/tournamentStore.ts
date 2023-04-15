@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
-// import apiService.ts
-import {useApiService} from "@/composables/apiService";
+import {useApiService} from "@/apiService";
 
 export const useTournamentStore = defineStore({
     id: "tournamentStore",

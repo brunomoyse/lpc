@@ -1,7 +1,12 @@
 import {Ref} from "vue";
-import {Tournament} from "@prisma/client";
-const config = useRuntimeConfig();
-
+import {Tournament, User} from "@prisma/client";
+// @todo - useRuntimeConfig() is not working here
+//const config = useRuntimeConfig();
+let config = {
+    public: {
+        apiBase: "http://localhost:3000/api/graphql"
+    }
+}
 export const useApiService = {
     getTournamentDetail: async (args: any): Promise<Ref<Tournament>> => {
         const tournamentId: string = args.tournamentId;
@@ -198,6 +203,40 @@ export const useApiService = {
         if (error?.value) console.error(error.value);
         if (data) return data as Ref<Tournament>;
         else throw createError({statusCode: 500, message: 'La désinscription n\'a pas abouti'});
+    },
+    loginUser: async (args: any): Promise<Ref<User>> => {
+        const {email, password} = args;
+        const {data, pending, refresh, error} = await useFetch(config.public.apiBase, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body: JSON.stringify({
+                query: `mutation LoginUser(
+            $email: String!
+            $password: String!
+        ) {
+            loginUser (
+                email: $email
+                password: $password
+            ){
+                id
+                lastName
+                firstName
+            }
+        }`,
+                variables: {
+                    email: email,
+                    password: password
+                }
+            }),
+            transform: (res: any) => res.data.loginUser,
+        });
+
+        if (error?.value) console.error(error.value);
+        if (data) return data as Ref<User>;
+        else throw createError({statusCode: 500, message: 'La connection a échoué'});
     }
 }
 

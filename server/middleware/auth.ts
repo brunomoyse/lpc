@@ -26,7 +26,7 @@ const checkIfLoginMutation = async (event: H3Event):Promise<Boolean> => {
     return operationType === "mutation" && operationName === "LoginUser";
 }
 
-const verifyToken = (event: H3Event) => {
+const verifyToken = (event: H3Event) : void => {
     const access_token = getCookie(event, "access-token");
     if (access_token) {
         const jwtPayload: string | JwtPayload = verify(
@@ -36,20 +36,22 @@ const verifyToken = (event: H3Event) => {
         if (typeof jwtPayload === 'object') {
             const currentUserId = jwtPayload.userId;
             event.context.auth = {currentUserId};
+        } else {
+            throw new Error("Invalid token");
         }
     } else {
-        throw new Error("No token provided");
+        throw new Error("No token providedxx");
     }
 }
 
 export default defineEventHandler(async (event: H3Event) => {
-    if (event.node.req.url !== "/login" ) {
-        if (event.node.req.url === "/api/graphql") {
-            const isLoginMutation = await checkIfLoginMutation(event);
-            if (!isLoginMutation) {
-                verifyToken(event);
-            }
-        } else {
+    if (event.node.req.url === '/logout') {
+        deleteCookie(event, 'access-token');
+        deleteCookie(event, 'refresh-token');
+    }
+    if (event.node.req.url === "/api/graphql") {
+        const isLoginMutation = await checkIfLoginMutation(event);
+        if (!isLoginMutation) {
             verifyToken(event);
         }
     }

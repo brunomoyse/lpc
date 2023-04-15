@@ -164,10 +164,7 @@
 // imports
 import {Tournament, TournamentRegistration} from "@/composables/types";
 import { useTournamentStore } from "@/stores/tournamentStore";
-
 import ModalConfirm from "~/components/ModalConfirm.vue";
-
-
 
 // data
 const displayedRegistrations = 6;

@@ -87,16 +87,16 @@ export const createUser = async (args: any) => {
 }
 
 
-export const loginUser = async (args: any, context: H3EventContext) => {
+export const loginUser = async (parent: any, args: any, context: any, event: any) => {
     const { email, password } = args;
-    const event: H3Event = context.event.event;
+
     const user: User|null = await prisma.user.findUnique({
         where: {
             email: email
         }
     });
 
-    if (!user) {
+    if (user === null) {
         throw new Error('No user found');
     }
 
@@ -106,18 +106,17 @@ export const loginUser = async (args: any, context: H3EventContext) => {
         throw new Error('Invalid password');
     }
 
-    const refreshToken = sign({ userId: user.id }, config.private.appSecret, { expiresIn: '7d' });
-    const accessToken = sign({ userId: user.id }, config.private.appSecret, { expiresIn: '1d' });
+    const refreshToken = sign({ user: user }, config.private.appSecret, { expiresIn: '7d' });
+    const accessToken = sign({ user: user }, config.private.appSecret, { expiresIn: '1d' });
 
-    // use the H3 setCookie function to set the cookie
-    setCookie(event, 'refresh-token', refreshToken, {
+    setCookie(context.event, 'refresh-token', refreshToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
     })
-    setCookie(event, 'access-token', accessToken, {
+    setCookie(context.event, 'access-token', accessToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 // 1 day
     });
-
+    console.log('test')
     return user;
 }

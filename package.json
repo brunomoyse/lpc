@@ -23,7 +23,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@apollo/server": "^4.5.0",
+    "@apollo/server": "^4.6.0",
     "@as-integrations/h3": "^1.1.5",
     "@nuxt-modules/compression": "^0.1.0",
     "@pinia/nuxt": "^0.4.8",

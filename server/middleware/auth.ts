@@ -43,7 +43,7 @@ const verifyToken = (event: H3Event) => {
 }
 
 export default defineEventHandler(async (event: H3Event) => {
-    if (event.node.req.url !== "/" ) {
+    if (event.node.req.url !== "/login" ) {
         if (event.node.req.url === "/api/graphql") {
             const isLoginMutation = await checkIfLoginMutation(event);
             if (!isLoginMutation) {

@@ -18,16 +18,23 @@
                         </picture>
                     </nuxt-link>
                     <div>
+                        <picture>
+                            <source :srcSet="'/users/avatar/' + user.id + '.avif'" type="image/avif" />
+                            <source :srcSet="'/users/avatar/' + user.id + '.webp'" type="image/webp" />
                         <nuxt-img
                             id="avatarButton"
                             type="button"
                             data-dropdown-toggle="userDropdown"
                             data-dropdown-placement="bottom-start"
                             class="w-10 h-10 rounded-full cursor-pointer"
-                            src="/users/avatar_1.png"
+                                    :src="'/users/avatar/' + user.id + '.png'"
                             alt="User dropdown"
+                                    width="40px"
+                                    height="40px"
                             @click="toggleDropdownMenu"
                         />
+                        </picture>
+
                         <!-- Dropdown menu -->
                         <div id="userDropdown" class="z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow absolute -translate-x-[135px]" v-if="menu">
                             <div class="py-3 px-4 text-sm text-gray-900">
@@ -75,6 +82,10 @@
 <script setup>
     import { ref  } from 'vue';
 
+    const user = {
+        id: 'abc',
+        avatarPath: '',
+    };
     let menu = ref(false);
     const toggleDropdownMenu = () => {
         menu.value = !menu.value;

@@ -21,18 +21,18 @@
                         <picture>
                             <source :srcSet="'/users/avatar/' + user.id + '.avif'" type="image/avif" />
                             <source :srcSet="'/users/avatar/' + user.id + '.webp'" type="image/webp" />
-                        <nuxt-img
-                            id="avatarButton"
-                            type="button"
-                            data-dropdown-toggle="userDropdown"
-                            data-dropdown-placement="bottom-start"
-                            class="w-10 h-10 rounded-full cursor-pointer"
+                            <nuxt-img
+                                    id="avatarButton"
+                                    type="button"
+                                    data-dropdown-toggle="userDropdown"
+                                    data-dropdown-placement="bottom-start"
+                                    class="w-10 h-10 rounded-full cursor-pointer"
                                     :src="'/users/avatar/' + user.id + '.png'"
-                            alt="User dropdown"
+                                    alt="User dropdown"
                                     width="40px"
                                     height="40px"
-                            @click="toggleDropdownMenu"
-                        />
+                                    @click="toggleDropdownMenu"
+                            />
                         </picture>
 
                         <!-- Dropdown menu -->
@@ -53,7 +53,7 @@
                                         </li>
                                     </ul>
                                 <div class="py-1">
-                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
+                                <a @click="disconnectCurrentUser" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Se déconnecter</a>
                             </div>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
 
 <script setup>
     import { ref  } from 'vue';
-
+    const router = useRouter();
     const user = {
         id: 'abc',
         avatarPath: '',
@@ -89,5 +89,11 @@
     let menu = ref(false);
     const toggleDropdownMenu = () => {
         menu.value = !menu.value;
+    }
+
+    const disconnectCurrentUser = () => {
+        const authCookie = useCookie('auth')
+        authCookie.value = null
+        router.push('/')
     }
 </script>

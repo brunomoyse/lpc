@@ -81,7 +81,11 @@
 
 <script setup>
     import { ref  } from 'vue';
+    import { useUserStore } from "@/stores/userStore";
+
     const router = useRouter();
+    const userStore = useUserStore();
+
     const user = {
         id: 'abc',
         avatarPath: '',
@@ -90,10 +94,9 @@
     const toggleDropdownMenu = () => {
         menu.value = !menu.value;
     }
-
-    const disconnectCurrentUser = () => {
-        const authCookie = useCookie('auth')
-        authCookie.value = null
-        router.push('/')
+    const disconnectCurrentUser = async () => {
+        await userStore.logoutUser();
+        menu.value = false;
+        await router.push('/login')
     }
 </script>

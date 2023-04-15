@@ -37,6 +37,12 @@ Regenerate the Prisma client
 prisma generate
 ```
 
+Convert images to next-gen format
+```bash
+magick abc.png abc.avif
+magick abc.png abc.webp
+```
+
 ## Production
 
 Build the application for production:

@@ -97,8 +97,8 @@ export const resolvers: Resolvers = {
         },
 
         // @ts-ignore
-        loginUser: async (parent, args, context, info) => {
-            console.log('context', context);
+        loginUser: async (parent, args, context: H3EventContext, info) => {
+            return await loginUser(parent, args, context, info);
             return await loginUser(args, context);
         }
 

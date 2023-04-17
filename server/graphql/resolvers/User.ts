@@ -5,7 +5,6 @@ import {
 } from "~/composables/passwordUtils";
 
 const config = useRuntimeConfig();
-import {setCookie, H3Event, H3EventContext} from 'h3'
 
 import pkg from 'jsonwebtoken/index.js';
 const { sign } = pkg;
@@ -86,7 +85,6 @@ export const createUser = async (args: any) => {
     })
 }
 
-
 export const loginUser = async (parent: any, args: any, context: any, event: any) => {
     const { email, password } = args;
 
@@ -106,17 +104,20 @@ export const loginUser = async (parent: any, args: any, context: any, event: any
         throw new Error('Invalid password');
     }
 
-    const refreshToken = sign({ user: user }, config.private.appSecret, { expiresIn: '7d' });
+    //const refreshToken = sign({ user: user }, config.private.appSecret, { expiresIn: '7d' });
     const accessToken = sign({ user: user }, config.private.appSecret, { expiresIn: '1d' });
 
-    setCookie(context.event, 'refresh-token', refreshToken, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
-    })
-    setCookie(context.event, 'access-token', accessToken, {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 // 1 day
-    });
-    console.log('test')
-    return user;
+    return {
+        user,
+        token: accessToken
+    };
+    //setCookie(context.event, 'refresh-token', refreshToken, {
+    //    httpOnly: true,
+    //    maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
+    //})
+    //setCookie(context.event, 'access-token', accessToken, {
+    //    httpOnly: true,
+    //    maxAge: 1000 * 60 * 60 * 24 // 1 day
+    //});
+    //return user;
 }

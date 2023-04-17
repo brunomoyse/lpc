@@ -33,7 +33,7 @@
         await userStore.loginUser({email, password});
         const loggedInUser = userStore.currentUser;
         if (loggedInUser) {
-            router.push('/');
+            await router.push('/');
         } else {
             console.log('Login failed');
         }

@@ -1,3 +1,4 @@
+// @ts-ignore
 import { schema } from '#graphql/schema';
 import { ApolloServer } from '@apollo/server';
 import {H3ContextFunctionArgument, startServerAndCreateH3Handler} from '@as-integrations/h3';
@@ -22,12 +23,13 @@ export default startServerAndCreateH3Handler(apollo, {
         const req = event.req as IncomingMessage
         const authHeader = req.headers.authorization
         let user
-        //console.log(req.headers)
+
         if (authHeader) {
             const token = authHeader.split(' ')[1] // Extract the JWT from the "Bearer" token
             try {
                 // Verify and decode the JWT to get the user
-                const dataUser = jwt.verify(token, SECRET_KEY) as MyContext['user']
+                //@ts-ignore
+                const dataUser:{user:object, token:object} = jwt.verify(token, SECRET_KEY) as MyContext['user']
                 if (dataUser) user = dataUser.user
             } catch (error: any) {
                 //console.error('Invalid token:', error.message)

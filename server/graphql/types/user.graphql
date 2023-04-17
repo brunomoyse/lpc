@@ -31,3 +31,8 @@ type Team {
     name: String!
     users: [User]!
 }
+
+type UserToken {
+    user: User!
+    token: String!
+}

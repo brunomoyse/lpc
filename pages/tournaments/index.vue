@@ -24,6 +24,7 @@
 <script setup lang="ts">
     // imports
     import { Tournament } from "@/composables/types";
+    import {useApiService} from "~/apiService";
 
     const config = useRuntimeConfig();
 
@@ -33,69 +34,8 @@
         skippedCount : 0,
     }
 
-    // methods
-    const getTournaments = async () => {
-        let { data, pending, refresh, error } = await useFetch(config.public.apiBase, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query: `query (
-                $take: Int
-                $skip: Int
-                $userId: ID
-                $startingRange: Date
-                $endingRange: Date
-            ) {
-                futureTournaments: tournaments (
-                    take: $take
-                    skip: $skip
-                    userId: $userId
-                    startingRange: $startingRange
-                ){
-                    id
-                    name
-                    scheduledAt
-                    lateRegistrationAt
-                    imgPath
-                    tournamentTags {
-                        name
-                    }
-                }
-                pastTournaments: tournaments (
-                    take: $take
-                    skip: $skip
-                    userId: $userId
-                    endingRange: $endingRange
-                ){
-                    id
-                    name
-                    scheduledAt
-                    lateRegistrationAt
-                    imgPath
-                    tournamentTags {
-                        name
-                    }
-                }
-            }`,
-                variables: {
-                    take: paginationSettings.perPage,
-                    skip: paginationSettings.skippedCount,
-                    startingRange: new Date().toISOString(),
-                    endingRange: new Date().toISOString()
-                }
-            }),
-            transform: (res: any) => res.data,
-        });
-        if (error?.value) console.log(error.value);
-        if (data) return data;
-        else throw createError({ statusCode: 404, message: 'Les tournois n\'ont pas été trouvés' });
-    };
-
     // fetching data
-    let tournaments: Ref<{futureTournaments: [Tournament], pastTournaments: [Tournament]}> = await getTournaments();
+    let tournaments: Ref<{futureTournaments: [Tournament], pastTournaments: [Tournament]}> = await useApiService.getTournaments({paginationSettings});
 
 
 </script>

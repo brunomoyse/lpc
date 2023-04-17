@@ -17,4 +17,7 @@ export const useUserStore = defineStore({
             this.currentUser = null;
         }
     }
+    persist: {
+        storage: persistedState.localStorage,
+    },
 })

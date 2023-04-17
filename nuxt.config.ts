@@ -10,6 +10,7 @@ export default defineNuxtConfig({
         '@nuxt/image-edge',
         'nuxt-graphql-server',
         '@pinia/nuxt',
+        '@pinia-plugin-persistedstate/nuxt',
         '@nuxt-modules/compression'
     ],
     graphqlServer: {

@@ -1,12 +1,11 @@
 import { useUserStore } from '@/stores/userStore';
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    const userStore = await useUserStore();
-    const currentUser = await userStore.currentUser;
-    let isLoggedIn = !!currentUser;
-    if (to.name === 'login' && isLoggedIn) {
+    // @ts-ignore
+    const token = localStorage.getItem('access-token');
+    if (to.name === 'login' && token) {
         return navigateTo('/');
-    }
-    if (to.name !== 'login' && !isLoggedIn) {
+    } else if (to.name !== 'login' && !token) {
         return navigateTo('/login');
     }
 })
